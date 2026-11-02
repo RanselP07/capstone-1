@@ -9,7 +9,6 @@ public class Main {
 
         welcome();
 
-
         homeScreen(myScanner);
     }
 
@@ -99,7 +98,7 @@ public class Main {
                     ledgerInput = myScanner.next().toUpperCase().charAt(0);
             }
 
-        }while (ledgerInput != 'H');
+        } while (ledgerInput != 'H');
     }
 
     private static void report(Scanner myScanner) {
@@ -144,7 +143,7 @@ public class Main {
                     reportInput = myScanner.nextInt();
             }
 
-        }while (reportInput != '0');
+        } while (reportInput != '0');
 
     }
 
