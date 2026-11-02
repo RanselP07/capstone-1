@@ -2,6 +2,8 @@ package com.pluralsight;
 
 import java.util.Scanner;
 
+import static sun.security.util.Event.report;
+
 public class Main {
 
     static void main(String[] args) {
@@ -47,6 +49,7 @@ public class Main {
                     break;
                 case 'L':
                     System.out.println("Ledger");
+                    ledger(myScanner);
                     break;
                 case 'X':
                     System.out.println("Exit");
@@ -59,4 +62,50 @@ public class Main {
         } while (homeInput != 'X');
 
     }
+
+    private static void ledger(Scanner myScanner) {
+        String ledgerMenu = """
+                A) All - Display all entries
+                D) Deposits - Display only the entries that are deposits into the account
+                P) Payments - Display only the negative entries (or payments)
+                R) Reports - A new screen that allows the user to run pre-defined reports or
+                to run a custom search
+                H) Home - go back to the home page
+                Enter your choice:""";
+
+        char ledgerInput;
+
+        do {
+            System.out.print("\n" + ledgerMenu + " ");
+            ledgerInput = myScanner.next().toUpperCase().charAt(0);
+
+            switch (ledgerInput) {
+                case 'A':
+                    System.out.println("All");
+                    break;
+                case 'D':
+                    System.out.println("Deposits");
+                    break;
+                case 'P':
+                    System.out.println("Payments");
+                    break;
+                case 'R':
+                    System.out.println("Reports");
+                    report(myScanner);
+                    break;
+                case 'H':
+                    System.out.println("Home");
+                    homeScreen(myScanner);
+                default:
+                    System.out.print("\n" + ledgerMenu + " ");
+                    ledgerInput = myScanner.next().toUpperCase().charAt(0);
+            }
+
+        }while (ledgerInput != 'H');
+    }
+
+    private static void report(Scanner myScanner) {
+    }
+
+
 }
