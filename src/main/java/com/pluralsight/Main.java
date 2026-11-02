@@ -2,8 +2,6 @@ package com.pluralsight;
 
 import java.util.Scanner;
 
-import static sun.security.util.Event.report;
-
 public class Main {
 
     static void main(String[] args) {
@@ -105,7 +103,49 @@ public class Main {
     }
 
     private static void report(Scanner myScanner) {
-    }
 
+        String reportMenu = """
+                1) Month To Date
+                2) Previous Month
+                3) Year To Date
+                4) Previous Year
+                5) Search by Vendor - prompt the user for the vendor name and
+                display all entries for that vendor
+                0) Back - go back to the Ledger page""";
+
+        int reportInput;
+
+        do {
+            System.out.print("\n" + reportMenu + " ");
+            reportInput = myScanner.nextInt();
+
+            switch (reportInput) {
+                case 1:
+                    System.out.println("All");
+                    break;
+                case 2:
+                    System.out.println("Deposits");
+                    break;
+                case 3:
+                    System.out.println("Payments");
+                    break;
+                case 4:
+                    System.out.println("Reports");
+                    report(myScanner);
+                    break;
+                case 5:
+                    System.out.println("Home");
+                    homeScreen(myScanner);
+                case 0:
+                    System.out.println("Back");
+                    ledger(myScanner);
+                default:
+                    System.out.print("\n" + reportMenu + " ");
+                    reportInput = myScanner.nextInt();
+            }
+
+        }while (reportInput != '0');
+
+    }
 
 }
