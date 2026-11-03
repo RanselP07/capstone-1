@@ -1,17 +1,19 @@
 package com.pluralsight;
 
-import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
 
-
     static void main(String[] args) {
         Scanner myScanner = new Scanner(System.in);
+        LocalDateTime today = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss");
 
         welcome();
 
-        homeScreenMenu(myScanner);
+        homeScreenMenu(myScanner, today, format);
     }
 
     // Welcome
@@ -26,7 +28,7 @@ public class Main {
 
     //region Menu & Sub-menu
     // Home Screen
-    private static void homeScreenMenu(Scanner myScanner) {
+    private static void homeScreenMenu(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
         String homeMenu = """
                 D) Add Deposit - prompt the user for the deposit information and
                 save it to the CSV file
@@ -36,30 +38,30 @@ public class Main {
                 X) Exit - exit the application
                 Enter your choice:""";
 
-        char homeInput;
+        char homeInput = ' ';
+
         do {
             System.out.print("\n" + homeMenu + " ");
-            homeInput = myScanner.next().toUpperCase().trim().charAt(0);
+            homeInput = myScanner.nextLine().toUpperCase().trim().charAt(0);
 
             switch (homeInput) {
                 case 'D':
-                    System.out.println("Add Deposit");
-                    homeScreen.addDeposit();
+                    System.out.println("\nAdd Deposit");
+                    HomeScreen.addDeposit(myScanner, today, format);
                     break;
                 case 'P':
-                    System.out.println("Make Payment");
-                    homeScreen.makePayment();
+                    System.out.println("\nMake Payment");
+                    HomeScreen.makePayment(myScanner, today, format);
                     break;
                 case 'L':
-                    System.out.println("Ledger");
+                    System.out.println("\nLedger");
                     ledger(myScanner);
                     break;
                 case 'X':
-                    System.out.println("Exit");
+                    System.out.println("\nExit");
                     break;
                 default:
-                    System.out.print("\n" + homeMenu + " ");
-                    homeInput = myScanner.next().toUpperCase().trim().charAt(0);
+                    System.out.println("Invalid choice. Please enter D, P, L, or X.");
             }
 
         } while (homeInput != 'X');
