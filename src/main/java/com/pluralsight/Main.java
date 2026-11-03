@@ -1,18 +1,20 @@
 package com.pluralsight;
 
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
+
 
     static void main(String[] args) {
         Scanner myScanner = new Scanner(System.in);
 
         welcome();
 
-        homeScreen(myScanner);
+        homeScreenMenu(myScanner);
     }
 
-
+    // Welcome
     private static void welcome() {
         try {
             System.out.println("Welcome to Java Bank, were your satisfaction is our top priority.");
@@ -22,7 +24,9 @@ public class Main {
         }
     }
 
-    private static void homeScreen(Scanner myScanner) {
+    //region Menu & Sub-menu
+    // Home Screen
+    private static void homeScreenMenu(Scanner myScanner) {
         String homeMenu = """
                 D) Add Deposit - prompt the user for the deposit information and
                 save it to the CSV file
@@ -35,14 +39,16 @@ public class Main {
         char homeInput;
         do {
             System.out.print("\n" + homeMenu + " ");
-            homeInput = myScanner.next().toUpperCase().charAt(0);
+            homeInput = myScanner.next().toUpperCase().trim().charAt(0);
 
             switch (homeInput) {
                 case 'D':
                     System.out.println("Add Deposit");
+                    homeScreen.addDeposit();
                     break;
                 case 'P':
                     System.out.println("Make Payment");
+                    homeScreen.makePayment();
                     break;
                 case 'L':
                     System.out.println("Ledger");
@@ -53,13 +59,14 @@ public class Main {
                     break;
                 default:
                     System.out.print("\n" + homeMenu + " ");
-                    homeInput = myScanner.next().toUpperCase().charAt(0);
+                    homeInput = myScanner.next().toUpperCase().trim().charAt(0);
             }
 
         } while (homeInput != 'X');
 
     }
 
+    // Ledger Screen
     private static void ledger(Scanner myScanner) {
         String ledgerMenu = """
                 A) All - Display all entries
@@ -74,7 +81,7 @@ public class Main {
 
         do {
             System.out.print("\n" + ledgerMenu + " ");
-            ledgerInput = myScanner.next().toUpperCase().charAt(0);
+            ledgerInput = myScanner.next().toUpperCase().trim().charAt(0);
 
             switch (ledgerInput) {
                 case 'A':
@@ -82,9 +89,11 @@ public class Main {
                     break;
                 case 'D':
                     System.out.println("Deposits");
+
                     break;
                 case 'P':
                     System.out.println("Payments");
+
                     break;
                 case 'R':
                     System.out.println("Reports");
@@ -92,15 +101,16 @@ public class Main {
                     break;
                 case 'H':
                     System.out.println("Home");
-                    homeScreen(myScanner);
+                    break;
                 default:
                     System.out.print("\n" + ledgerMenu + " ");
-                    ledgerInput = myScanner.next().toUpperCase().charAt(0);
+                    ledgerInput = myScanner.next().toUpperCase().trim().charAt(0);
             }
 
         } while (ledgerInput != 'H');
     }
 
+    // Report Screen
     private static void report(Scanner myScanner) {
 
         String reportMenu = """
@@ -110,7 +120,8 @@ public class Main {
                 4) Previous Year
                 5) Search by Vendor - prompt the user for the vendor name and
                 display all entries for that vendor
-                0) Back - go back to the Ledger page""";
+                0) Back - go back to the Ledger page
+                Enter your choice:""";
 
         int reportInput;
 
@@ -120,24 +131,22 @@ public class Main {
 
             switch (reportInput) {
                 case 1:
-                    System.out.println("All");
+                    System.out.println("Month to Date");
                     break;
                 case 2:
-                    System.out.println("Deposits");
+                    System.out.println("Previous Month");
                     break;
                 case 3:
-                    System.out.println("Payments");
+                    System.out.println("Year to Date");
                     break;
                 case 4:
-                    System.out.println("Reports");
-                    report(myScanner);
+                    System.out.println("Previous Year");
                     break;
                 case 5:
-                    System.out.println("Home");
-                    homeScreen(myScanner);
+                    System.out.println("Search by Vendor");
                 case 0:
                     System.out.println("Back");
-                    ledger(myScanner);
+                    break;
                 default:
                     System.out.print("\n" + reportMenu + " ");
                     reportInput = myScanner.nextInt();
@@ -146,5 +155,6 @@ public class Main {
         } while (reportInput != '0');
 
     }
+    //endregion
 
 }
