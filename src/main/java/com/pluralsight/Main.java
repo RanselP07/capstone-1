@@ -30,12 +30,10 @@ public class Main {
     // Home Screen
     private static void homeScreenMenu(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
         String homeMenu = """
-                D) Add Deposit - prompt the user for the deposit information and
-                save it to the CSV file
-                P) Make Payment (Debit) - prompt the user for the debit information
-                and save it to the CSV file
-                L) Ledger - display the ledger screen
-                X) Exit - exit the application
+                D) Add Deposit
+                P) Make Payment (Debit)
+                L) Ledger
+                X) Exit
                 Enter your choice:""";
 
         char homeInput = ' ';
@@ -83,15 +81,16 @@ public class Main {
 
         do {
             System.out.print("\n" + ledgerMenu + " ");
-            ledgerInput = myScanner.next().toUpperCase().trim().charAt(0);
+            ledgerInput = myScanner.nextLine().toUpperCase().trim().charAt(0);
 
             switch (ledgerInput) {
                 case 'A':
                     System.out.println("All");
+                    Ledger.all();
                     break;
                 case 'D':
                     System.out.println("Deposits");
-
+                    Ledger.deposits();
                     break;
                 case 'P':
                     System.out.println("Payments");
@@ -105,8 +104,7 @@ public class Main {
                     System.out.println("Home");
                     break;
                 default:
-                    System.out.print("\n" + ledgerMenu + " ");
-                    ledgerInput = myScanner.next().toUpperCase().trim().charAt(0);
+                    System.out.println("Invalid choice. Please enter A, D, P, R, or H.");
             }
 
         } while (ledgerInput != 'H');
