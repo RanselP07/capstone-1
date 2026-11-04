@@ -110,5 +110,3 @@ public class HomeScreen {
     }
     //endregion
 }
-
-

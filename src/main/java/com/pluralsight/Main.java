@@ -1,7 +1,11 @@
 package com.pluralsight;
 
+import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -27,7 +31,7 @@ public class Main {
     }
 
     //region Menu & Sub-menu
-    // Home Screen
+    //region Home Screen
     private static void homeScreenMenu(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
         String homeMenu = """
                 D) Add Deposit
@@ -36,37 +40,195 @@ public class Main {
                 X) Exit
                 Enter your choice:""";
 
-        char homeInput = ' ';
+        String homeInput = "";
 
         do {
             System.out.print("\n" + homeMenu + " ");
-            homeInput = myScanner.nextLine().toUpperCase().trim().charAt(0);
+            homeInput = myScanner.nextLine().toUpperCase();
 
             switch (homeInput) {
-                case 'D':
+                case "D":
                     System.out.println("\nAdd Deposit");
-                    HomeScreen.addDeposit(myScanner, today, format);
+                    addDeposit(myScanner, today, format);
                     break;
-                case 'P':
+                case "P":
                     System.out.println("\nMake Payment");
-                    HomeScreen.makePayment(myScanner, today, format);
+                    makePayment(myScanner, today, format);
                     break;
-                case 'L':
+                case "L":
                     System.out.println("\nLedger");
                     ledger(myScanner);
                     break;
-                case 'X':
+                case "X":
                     System.out.println("\nExit");
                     break;
                 default:
                     System.out.println("Invalid choice. Please enter D, P, L, or X.");
             }
 
-        } while (homeInput != 'X');
+        } while (!homeInput.equals("X"));
 
     }
 
-    // Ledger Screen
+    //region Deposit
+    private static String depositInfo(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+
+        double amount = 0;
+        String answer = "";
+        String amountString = "";
+        String dateTime = today.format(format);
+        String deposit = "";
+
+        do {
+
+            System.out.print("Enter Description: ");
+            String description = homeScanner.nextLine();
+
+            System.out.print("Enter Vendor: ");
+            String vendor = homeScanner.nextLine();
+
+            do {
+
+                while (true) {
+                    System.out.print("Enter Deposit Amount: ");
+                    amountString = homeScanner.nextLine();
+                    try {
+                        amount = Double.parseDouble(amountString);
+                        deposit = dateTime + "|" + description + "|" + vendor + "|" + amount;
+                        return deposit;
+                    } catch (NumberFormatException e) {
+                        System.out.print("Quit try to break my code.\n");
+                    }
+
+
+                    if (amount == 0) {
+                        System.out.println("Insufficient amount please try again.");
+                    } else if (amount < 0) {
+                        System.out.print("This is a negative amount, would you like to pay a payment (Yes/No)? ");
+                        answer = homeScanner.nextLine().toUpperCase();
+
+
+                        switch (answer) {
+                            case "YES":
+                                makePayment(homeScanner, today, format);
+                                break;
+                            case "NO":
+                                System.out.println("Enter a sufficient amount.");
+                                break;
+                            default:
+                                System.out.println("Please answer Yes/No");
+                                break;
+                        }
+
+                    }
+                }
+
+            }while (answer.equals("YES"));
+
+        } while (amount < 0);
+
+    }
+
+    public static void addDeposit(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+
+        try {
+            BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/test.csv", true));
+            String confirmation = "";
+
+            do {
+                String deposit = depositInfo(homeScanner, today, format);
+                System.out.println(deposit);
+                System.out.print("Please confirm: Is the deposit information correct? (Yes/No): ");
+                confirmation = homeScanner.nextLine().trim().toLowerCase();
+
+                switch (confirmation){
+                    case "yes":
+                        System.out.println("Deposit Complete!");
+                        bufWriter.write("\n" + deposit);
+                        break;
+                    case "no":
+                        System.out.println("Let's try again.");
+                        break;
+                    default:
+                        while (true){
+                            System.out.print("Invalid answer, please answer with a Yes/No: ");
+                            confirmation = homeScanner.nextLine().trim().toLowerCase();
+
+                            if (confirmation.equals("yes")){
+                                System.out.println("Deposit Complete!");
+                                bufWriter.write("\n" + deposit);
+                                break;
+                            }else if (confirmation.equals("no")){
+                                System.out.println("Let's try again.");
+                                depositInfo(homeScanner, today, format);
+                                break;
+                            }
+
+                        }
+
+                }
+
+            } while (confirmation.equals("no"));
+
+            bufWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    //endregion
+
+    //region Payment
+    private static String paymentInfo(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+        System.out.print("Enter Description: ");
+        String description = homeScanner.nextLine();
+
+        System.out.print("Enter Vendor: ");
+        String vendor = homeScanner.nextLine();
+
+        System.out.print("Enter Payment Amount: ");
+        String amount = homeScanner.nextLine();
+
+        String dateTime = today.format(format);
+
+        String payment = dateTime + "|" + description + "|" + vendor + "|" + amount;
+
+        System.out.println(payment);
+        return payment;
+    }
+
+    public static void makePayment(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+
+
+        try {
+            BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/test.csv", true));
+            String confirmation = "";
+
+            do {
+                String payment = paymentInfo(homeScanner, today, format);
+
+                System.out.print("Please confirm: Is the payment information correct? (Yes/No): ");
+                confirmation = homeScanner.nextLine().trim().toLowerCase();
+
+                if (confirmation.equals("yes")) {
+                    System.out.println("Deposit Complete!");
+                    bufWriter.write("\n" + payment);
+                } else if (confirmation.equals("no")) {
+                    System.out.println("Let's try again.");
+                }
+
+            } while (confirmation.equals("no"));
+
+            bufWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    //endregion
+    //endregion
+
+    //region Ledger Screen
     private static void ledger(Scanner myScanner) {
         String ledgerMenu = """
                 A) All - Display all entries
@@ -77,40 +239,129 @@ public class Main {
                 H) Home - go back to the home page
                 Enter your choice:""";
 
-        char ledgerInput;
+        String ledgerInput;
 
         do {
             System.out.print("\n" + ledgerMenu + " ");
-            ledgerInput = myScanner.nextLine().toUpperCase().trim().charAt(0);
+            ledgerInput = myScanner.nextLine().toUpperCase();
 
             switch (ledgerInput) {
-                case 'A':
+                case "A":
                     System.out.println("All");
-                    Ledger.all();
+                    all();
                     break;
-                case 'D':
+                case "D":
                     System.out.println("Deposits");
-                    Ledger.deposits();
+                    deposits();
                     break;
-                case 'P':
+                case "P":
                     System.out.println("Payments");
 
                     break;
-                case 'R':
+                case "R":
                     System.out.println("Reports");
                     report(myScanner);
                     break;
-                case 'H':
+                case "H":
                     System.out.println("Home");
                     break;
                 default:
                     System.out.println("Invalid choice. Please enter A, D, P, R, or H.");
             }
 
-        } while (ledgerInput != 'H');
+        } while (!ledgerInput.equals("H"));
     }
 
-    // Report Screen
+    public static void all() {
+        try {
+            BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = buffReader.readLine();
+
+            while (line != null) {
+                System.out.println(line);
+
+                line = buffReader.readLine();
+            }
+            buffReader.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void deposits() {
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = bufReader.readLine();
+            ArrayList<Transaction> deposit = new ArrayList<>();
+
+
+            line = bufReader.readLine();
+
+            while (line != null) {
+                String[] statementInfo = line.split("\\|");
+                LocalDate date = LocalDate.parse(statementInfo[0]);
+                LocalTime time = LocalTime.parse(statementInfo[1]);
+                String description = statementInfo[2];
+                String vendor = statementInfo[3];
+                double amount = Double.parseDouble(statementInfo[4]);
+
+                if (amount >= 0) {
+                    Transaction t = new Transaction(date, time, description, vendor, amount);
+                    deposit.add(t);
+                    System.out.printf("Description: %s - Vendor: %s - Price: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
+                }
+                line = bufReader.readLine();
+            }
+
+            bufReader.close();
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void payments() {
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = bufReader.readLine();
+            ArrayList<Transaction> deposit = new ArrayList<>();
+
+
+            line = bufReader.readLine();
+
+            while (line != null) {
+                String[] statementInfo = line.split("\\|");
+                LocalDate date = LocalDate.parse(statementInfo[0]);
+                LocalTime time = LocalTime.parse(statementInfo[1]);
+                String description = statementInfo[2];
+                String vendor = statementInfo[3];
+                double amount = Double.parseDouble(statementInfo[4]);
+
+                if (amount < 0) {
+                    Transaction t = new Transaction(date, time, description, vendor, amount);
+                    deposit.add(t);
+                    System.out.printf("Description: %s - Vendor: %s - Price: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
+                }
+                line = bufReader.readLine();
+            }
+
+            bufReader.close();
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //endregion
+
+    //region Report Screen
     private static void report(Scanner myScanner) {
 
         String reportMenu = """
@@ -155,6 +406,9 @@ public class Main {
         } while (reportInput != '0');
 
     }
+
     //endregion
+    //endregion
+
 
 }
