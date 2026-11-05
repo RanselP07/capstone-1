@@ -35,7 +35,7 @@ public class Ledger {
             BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
             String line = bufReader.readLine();
             ArrayList<Transaction> deposit = new ArrayList<>();
-            int counter = -1;
+
 
 
             line = bufReader.readLine();
@@ -51,7 +51,6 @@ public class Ledger {
                 if (amount >= 0) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     deposit.add(t);
-                    counter++;
                     System.out.printf("Description: %s - Vendor: %s - Price: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
                 line = bufReader.readLine();
