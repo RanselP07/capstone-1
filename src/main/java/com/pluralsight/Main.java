@@ -96,7 +96,8 @@ public class Main {
                     amountString = homeScanner.nextLine().trim();
                     try {
                         amount = Double.parseDouble(amountString);
-                        deposit = dateTime + "|" + description + "|" + vendor + "|" + amount;
+                        String stringFormat = "%s|%s|%s|$%.2f";
+                        deposit = String.format(stringFormat, dateTime, description, vendor, amount);
                     } catch (NumberFormatException e) {
                         System.out.print("Quit try to break my code.\n");
                     }
@@ -202,8 +203,8 @@ public class Main {
                     amountString = homeScanner.nextLine();
                     try {
                         payment = Double.parseDouble(amountString);
-                        paymentStatues = dateTime + "|" + description + "|" + vendor + "|-" + payment;
-
+                        String stringFormat = "%s|%s|%s|$%.2f";
+                        paymentStatues = String.format(stringFormat, dateTime, description, vendor, payment);
                         if (payment == 0) {
                             System.out.println("Insufficient amount please try again.");
                         } else if (payment > 0) {
@@ -457,46 +458,49 @@ public class Main {
                 0) Back - go back to the Ledger page
                 Enter your choice:""";
 
-        int reportInput;
+        String reportInput;
 
         do {
             System.out.print("\n" + reportMenu + " ");
-            reportInput = myScanner.nextInt();
+            reportInput = myScanner.nextLine();
 
             switch (reportInput) {
-                case 1:
+                case "1":
                     System.out.println("Month to Date");
                     monthToDate(today);
                     break;
-                case 2:
+                case "2":
                     System.out.println("Previous Month");
                     previousMonth(today);
                     break;
-                case 3:
+                case "3":
                     System.out.println("Year to Date");
                     yearToDate(today);
                     break;
-                case 4:
+                case "4":
                     System.out.println("Previous Year");
                     previousYear(today);
                     break;
-                case 5:
+                case "5":
                     System.out.println("Search by Vendor");
-                    searchByVendor();
-                case 0:
+                    searchByVendor(myScanner);
+                    break;
+                case "0":
                     System.out.println("Back");
                     break;
                 default:
                     System.out.print("\n" + reportMenu + " ");
-                    reportInput = myScanner.nextInt();
+                    reportInput = myScanner.nextLine();
             }
 
-        } while (reportInput != '0');
+        } while (reportInput != "0");
 
     }
 
+    // Month to date
     private static void monthToDate(LocalDateTime today) {
         int thisMonth = today.getMonthValue();
+        int thisYear = today.getYear();
         ArrayList<Transaction> thisMonthTransactions = new ArrayList<>();
 
         try {
@@ -507,17 +511,17 @@ public class Main {
             while (line != null) {
                 String[] statementInfo = line.split("\\|");
                 LocalDate date = LocalDate.parse(statementInfo[0]);
+                int fileYear = date.getYear();
                 LocalTime time = LocalTime.parse(statementInfo[1]);
                 String description = statementInfo[2];
                 String vendor = statementInfo[3];
                 double amount = Double.parseDouble(statementInfo[4]);
 
-                int yearInFile = date.getMonthValue();
+                int monthInFile = date.getMonthValue();
 
-                if (thisMonth == yearInFile) {
+                if (thisMonth == monthInFile && thisYear == fileYear) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     thisMonthTransactions.add(t);
-                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
 
                 line = bufReader.readLine();
@@ -537,8 +541,10 @@ public class Main {
         }
     }
 
+    // Previous Month
     private static void previousMonth(LocalDateTime today) {
         int prevMonth = today.minusMonths(1).getMonthValue();
+        int thisYear = today.getYear();
         ArrayList<Transaction> prevMonthTransaction = new ArrayList<>();
 
         try {
@@ -549,6 +555,7 @@ public class Main {
             while (line != null) {
                 String[] statementInfo = line.split("\\|");
                 LocalDate date = LocalDate.parse(statementInfo[0]);
+                int fileYear = date.getYear();
                 LocalTime time = LocalTime.parse(statementInfo[1]);
                 String description = statementInfo[2];
                 String vendor = statementInfo[3];
@@ -556,7 +563,7 @@ public class Main {
 
                 int prevMonthFile = date.getMonthValue();
 
-                if (prevMonth == prevMonthFile) {
+                if (prevMonth == prevMonthFile && thisYear == fileYear) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     prevMonthTransaction.add(t);
                 }
@@ -577,9 +584,11 @@ public class Main {
         }
     }
 
+    // Year to date
     private static void yearToDate(LocalDateTime today) {
 
         int thisYear = today.getYear();
+        int thisMonth = today.getMonthValue();
         ArrayList<Transaction> thisYearTransaction = new ArrayList<>();
 
         try {
@@ -590,6 +599,7 @@ public class Main {
             while (line != null) {
                 String[] statementInfo = line.split("\\|");
                 LocalDate date = LocalDate.parse(statementInfo[0]);
+                int fileMonth = date.getMonthValue();
                 LocalTime time = LocalTime.parse(statementInfo[1]);
                 String description = statementInfo[2];
                 String vendor = statementInfo[3];
@@ -597,10 +607,9 @@ public class Main {
 
                 int yearInFile = date.getYear();
 
-                if (thisYear == yearInFile) {
+                if (thisYear == yearInFile && thisMonth == fileMonth) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     thisYearTransaction.add(t);
-                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
 
                 line = bufReader.readLine();
@@ -620,9 +629,11 @@ public class Main {
         }
     }
 
+
     private static void previousYear(LocalDateTime today) {
 
         int thisYear = today.minusYears(1).getYear();
+        int thisMonth = today.getMonthValue();
         ArrayList<Transaction> prevYearTransaction = new ArrayList<>();
 
         try {
@@ -633,6 +644,7 @@ public class Main {
             while (line != null) {
                 String[] statementInfo = line.split("\\|");
                 LocalDate date = LocalDate.parse(statementInfo[0]);
+                int fileMonth = date.getMonthValue();
                 LocalTime time = LocalTime.parse(statementInfo[1]);
                 String description = statementInfo[2];
                 String vendor = statementInfo[3];
@@ -640,10 +652,9 @@ public class Main {
 
                 int yearInFile = date.getYear();
 
-                if (thisYear == yearInFile) {
+                if (thisYear == yearInFile && thisMonth == fileMonth) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     prevYearTransaction.add(t);
-                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
 
                 line = bufReader.readLine();
@@ -664,9 +675,48 @@ public class Main {
 
     }
 
-    private static void searchByVendor() {
+    private static void searchByVendor(Scanner myScanner) {
+
+        ArrayList<Transaction> vendors = new ArrayList<>();
+        System.out.print("Enter the vendor: ");
+        String input = myScanner.nextLine();
+
+
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = bufReader.readLine();
+            line = bufReader.readLine();
+
+            while (line != null) {
+                String[] statementInfo = line.split("\\|");
+                LocalDate date = LocalDate.parse(statementInfo[0]);
+                LocalTime time = LocalTime.parse(statementInfo[1]);
+                String description = statementInfo[2];
+                String vendor = statementInfo[3];
+                double amount = Double.parseDouble(statementInfo[4]);
+
+
+                if (vendor.equals(input)) {
+                    Transaction t = new Transaction(date, time, description, vendor, amount);
+                    vendors.add(t);
+                }
+
+                line = bufReader.readLine();
+            }
+
+            Collections.reverse(vendors);
+
+            for (int i = 0; i < vendors.size(); i++) {
+                System.out.println(vendors.get(i));
+            }
+
+            bufReader.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     //endregion
     //endregion
-
 }
