@@ -4,7 +4,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -220,7 +219,7 @@ public class Main {
                                         System.out.print("Enter a sufficient amount: ");
                                         amountString = homeScanner.nextLine();
                                         payment = Double.parseDouble(amountString);
-                                        if (payment < 0){
+                                        if (payment < 0) {
                                             break;
                                         }
                                     }
@@ -456,6 +455,7 @@ public class Main {
                     break;
                 case 3:
                     System.out.println("Year to Date");
+                    yearToDate(today);
                     break;
                 case 4:
                     System.out.println("Previous Year");
@@ -474,10 +474,9 @@ public class Main {
 
     }
 
-
     private static void monthToDate(LocalDateTime today) {
-        int currentMonth = today.getMonthValue();
-        ArrayList<Transaction> monthTransactions = new ArrayList<>();
+        int thisMonth = today.getMonthValue();
+        ArrayList<Transaction> thisMonthTransactions = new ArrayList<>();
 
         try {
             BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
@@ -492,11 +491,11 @@ public class Main {
                 String vendor = statementInfo[3];
                 double amount = Double.parseDouble(statementInfo[4]);
 
-                int transactionMonth = date.getMonthValue();
+                int yearInFile = date.getMonthValue();
 
-                if (currentMonth == transactionMonth) {
+                if (thisMonth == yearInFile) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
-                    monthTransactions.add(t);
+                    thisMonthTransactions.add(t);
                     System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
 
@@ -528,11 +527,48 @@ public class Main {
                 String vendor = statementInfo[3];
                 double amount = Double.parseDouble(statementInfo[4]);
 
-                int prevTransaction = date.getMonthValue();
+                int prevMonthFile = date.getMonthValue();
 
-                if (prevMonth == prevTransaction) {
+                if (prevMonth == prevMonthFile) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     prevMonthTransaction.add(t);
+                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
+                }
+
+                line = bufReader.readLine();
+            }
+
+            bufReader.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void yearToDate(LocalDateTime today) {
+
+        int thisYear = today.getYear();
+        ArrayList<Transaction> thisYearTransaction = new ArrayList<>();
+
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = bufReader.readLine();
+            line = bufReader.readLine();
+
+            while (line != null) {
+                String[] statementInfo = line.split("\\|");
+                LocalDate date = LocalDate.parse(statementInfo[0]);
+                LocalTime time = LocalTime.parse(statementInfo[1]);
+                String description = statementInfo[2];
+                String vendor = statementInfo[3];
+                double amount = Double.parseDouble(statementInfo[4]);
+
+                int yearInFile = date.getYear();
+
+                if (thisYear == yearInFile) {
+                    Transaction t = new Transaction(date, time, description, vendor, amount);
+                    thisYearTransaction.add(t);
                     System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
 
