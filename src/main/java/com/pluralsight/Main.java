@@ -98,7 +98,6 @@ public class Main {
                     try {
                         amount = Double.parseDouble(amountString);
                         deposit = dateTime + "|" + description + "|" + vendor + "|" + amount;
-                        return deposit;
                     } catch (NumberFormatException e) {
                         System.out.print("Quit try to break my code.\n");
                     }
@@ -124,6 +123,7 @@ public class Main {
                         }
 
                     }
+                    return deposit;
                 }
 
             } while (answer.equals("YES"));
@@ -163,7 +163,6 @@ public class Main {
                                 break;
                             } else if (confirmation.equals("no")) {
                                 System.out.println("Let's try again.");
-                                depositInfo(homeScanner, today, format);
                                 break;
                             }
 
@@ -484,6 +483,7 @@ public class Main {
                     break;
                 case 5:
                     System.out.println("Search by Vendor");
+                    searchByVendor();
                 case 0:
                     System.out.println("Back");
                     break;
@@ -663,6 +663,9 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private static void searchByVendor() {
     }
     //endregion
     //endregion
