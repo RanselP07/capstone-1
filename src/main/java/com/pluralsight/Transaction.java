@@ -58,4 +58,8 @@ public class Transaction {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
+    public String toString() {
+        return String.format("%s | %s | %s | %s | $%.2f", date, time, description, vendor, amount);
+    }
 }

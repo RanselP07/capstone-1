@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 
 public class Main {
 
@@ -352,9 +353,9 @@ public class Main {
                 line = buffReader.readLine();
             }
 
-            Collections.sort(allTransactions, Collections.reverseOrder());
+            Collections.reverse(allTransactions);
 
-            for (int i = 0; i < allTransactions.size(); i++){
+            for (int i = 0; i < allTransactions.size(); i++) {
                 System.out.println(allTransactions.get(i));
             }
 
@@ -386,19 +387,17 @@ public class Main {
                 if (amount > 0) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     deposit.add(t);
-                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
                 line = bufReader.readLine();
             }
 
-            Collections.sort(deposit, Collections.reverseOrder());
-
-            for (int i = 0; i < deposit.size(); i++){
-                System.out.println(deposit.get(i));
-            }
-
             bufReader.close();
 
+            Collections.reverse(deposit);
+
+            for (int i = 0; i < deposit.size(); i++) {
+                System.out.println(deposit.get(i));
+            }
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -427,19 +426,17 @@ public class Main {
                 if (amount < 0) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     payment.add(t);
-                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
                 line = bufReader.readLine();
             }
 
-            Collections.sort(payment, Collections.reverseOrder());
-
-            for (int i = 0; i < payment.size(); i++){
-                System.out.println(payment.get(i));
-            }
-
             bufReader.close();
 
+            Collections.reverse(payment);
+
+            for (int i = 0; i < payment.size(); i++) {
+                System.out.println(payment.get(i));
+            }
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -483,6 +480,7 @@ public class Main {
                     break;
                 case 4:
                     System.out.println("Previous Year");
+                    previousYear(today);
                     break;
                 case 5:
                     System.out.println("Search by Vendor");
@@ -526,9 +524,9 @@ public class Main {
                 line = bufReader.readLine();
             }
 
-            Collections.sort(thisMonthTransactions, Collections.reverseOrder());
+            Collections.reverse(thisMonthTransactions);
 
-            for (int i = 0; i < thisMonthTransactions.size(); i++){
+            for (int i = 0; i < thisMonthTransactions.size(); i++) {
                 System.out.println(thisMonthTransactions.get(i));
             }
 
@@ -562,19 +560,17 @@ public class Main {
                 if (prevMonth == prevMonthFile) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
                     prevMonthTransaction.add(t);
-                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
-
                 line = bufReader.readLine();
             }
+            bufReader.close();
 
-            Collections.sort(prevMonthTransaction, Collections.reverseOrder());
+            Collections.reverse(prevMonthTransaction);
 
-            for (int i = 0; i < prevMonthTransaction.size(); i++){
+            for (int i = 0; i < prevMonthTransaction.size(); i++) {
                 System.out.println(prevMonthTransaction.get(i));
             }
 
-            bufReader.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -611,9 +607,9 @@ public class Main {
                 line = bufReader.readLine();
             }
 
-            Collections.sort(thisYearTransaction, Collections.reverseOrder());
+            Collections.reverse(thisYearTransaction);
 
-            for (int i = 0; i < thisYearTransaction.size(); i++){
+            for (int i = 0; i < thisYearTransaction.size(); i++) {
                 System.out.println(thisYearTransaction.get(i));
             }
 
@@ -625,6 +621,49 @@ public class Main {
         }
     }
 
+    private static void previousYear(LocalDateTime today) {
+
+        int thisYear = today.minusYears(1).getYear();
+        ArrayList<Transaction> prevYearTransaction = new ArrayList<>();
+
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = bufReader.readLine();
+            line = bufReader.readLine();
+
+            while (line != null) {
+                String[] statementInfo = line.split("\\|");
+                LocalDate date = LocalDate.parse(statementInfo[0]);
+                LocalTime time = LocalTime.parse(statementInfo[1]);
+                String description = statementInfo[2];
+                String vendor = statementInfo[3];
+                double amount = Double.parseDouble(statementInfo[4]);
+
+                int yearInFile = date.getYear();
+
+                if (thisYear == yearInFile) {
+                    Transaction t = new Transaction(date, time, description, vendor, amount);
+                    prevYearTransaction.add(t);
+                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
+                }
+
+                line = bufReader.readLine();
+            }
+
+            Collections.reverse(prevYearTransaction);
+
+            for (int i = 0; i < prevYearTransaction.size(); i++) {
+                System.out.println(prevYearTransaction.get(i));
+            }
+
+            bufReader.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     //endregion
     //endregion
 
