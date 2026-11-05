@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -451,6 +452,7 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("Previous Month");
+                    previousMonth(today);
                     break;
                 case 3:
                     System.out.println("Year to Date");
@@ -472,10 +474,10 @@ public class Main {
 
     }
 
-    private static void monthToDate(LocalDateTime today) {
 
-        int month = today.getDayOfMonth();
-        ArrayList<Transaction> deposit = new ArrayList<>();
+    private static void monthToDate(LocalDateTime today) {
+        int currentMonth = today.getMonthValue();
+        ArrayList<Transaction> monthTransactions = new ArrayList<>();
 
         try {
             BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
@@ -490,11 +492,47 @@ public class Main {
                 String vendor = statementInfo[3];
                 double amount = Double.parseDouble(statementInfo[4]);
 
-                int transactionMonth = date.getDayOfMonth();
+                int transactionMonth = date.getMonthValue();
 
-                if (month == transactionMonth) {
+                if (currentMonth == transactionMonth) {
                     Transaction t = new Transaction(date, time, description, vendor, amount);
-                    deposit.add(t);
+                    monthTransactions.add(t);
+                    System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
+                }
+
+                line = bufReader.readLine();
+            }
+
+            bufReader.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void previousMonth(LocalDateTime today) {
+        int prevMonth = today.minusMonths(1).getMonthValue();
+        ArrayList<Transaction> prevMonthTransaction = new ArrayList<>();
+
+        try {
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            String line = bufReader.readLine();
+            line = bufReader.readLine();
+
+            while (line != null) {
+                String[] statementInfo = line.split("\\|");
+                LocalDate date = LocalDate.parse(statementInfo[0]);
+                LocalTime time = LocalTime.parse(statementInfo[1]);
+                String description = statementInfo[2];
+                String vendor = statementInfo[3];
+                double amount = Double.parseDouble(statementInfo[4]);
+
+                int prevTransaction = date.getMonthValue();
+
+                if (prevMonth == prevTransaction) {
+                    Transaction t = new Transaction(date, time, description, vendor, amount);
+                    prevMonthTransaction.add(t);
                     System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
 
