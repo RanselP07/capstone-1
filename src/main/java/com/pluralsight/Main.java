@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -339,13 +340,24 @@ public class Main {
     public static void all() {
         try {
             BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            ArrayList<String> allTransactions = new ArrayList<>();
             String line = buffReader.readLine();
 
+            line = buffReader.readLine();
+
             while (line != null) {
-                System.out.println(line);
+
+                allTransactions.add(line);
 
                 line = buffReader.readLine();
             }
+
+            Collections.sort(allTransactions, Collections.reverseOrder());
+
+            for (int i = 0; i < allTransactions.size(); i++){
+                System.out.println(allTransactions.get(i));
+            }
+
             buffReader.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -377,6 +389,12 @@ public class Main {
                     System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
                 line = bufReader.readLine();
+            }
+
+            Collections.sort(deposit, Collections.reverseOrder());
+
+            for (int i = 0; i < deposit.size(); i++){
+                System.out.println(deposit.get(i));
             }
 
             bufReader.close();
@@ -412,6 +430,12 @@ public class Main {
                     System.out.printf("Description: %s - Vendor: %s - Amount: $%.2f%n", t.getDescription(), t.getVendor(), t.getAmount());
                 }
                 line = bufReader.readLine();
+            }
+
+            Collections.sort(payment, Collections.reverseOrder());
+
+            for (int i = 0; i < payment.size(); i++){
+                System.out.println(payment.get(i));
             }
 
             bufReader.close();
@@ -502,6 +526,12 @@ public class Main {
                 line = bufReader.readLine();
             }
 
+            Collections.sort(thisMonthTransactions, Collections.reverseOrder());
+
+            for (int i = 0; i < thisMonthTransactions.size(); i++){
+                System.out.println(thisMonthTransactions.get(i));
+            }
+
             bufReader.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -536,6 +566,12 @@ public class Main {
                 }
 
                 line = bufReader.readLine();
+            }
+
+            Collections.sort(prevMonthTransaction, Collections.reverseOrder());
+
+            for (int i = 0; i < prevMonthTransaction.size(); i++){
+                System.out.println(prevMonthTransaction.get(i));
             }
 
             bufReader.close();
@@ -573,6 +609,12 @@ public class Main {
                 }
 
                 line = bufReader.readLine();
+            }
+
+            Collections.sort(thisYearTransaction, Collections.reverseOrder());
+
+            for (int i = 0; i < thisYearTransaction.size(); i++){
+                System.out.println(thisYearTransaction.get(i));
             }
 
             bufReader.close();

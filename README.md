@@ -7,7 +7,7 @@ A command-line interface (CLI) application built in Java to track financial tran
 ## Features
 
 - **Home Screen Navigation**
-    - `D) Add Deposit`: Prompt for deposit details (date, time, description, vendor, amount) and save to the transaction history.
+    - `D) Add Deposit`: Prompt for deposit details and save to the transaction history.
     - `P) Make Payment (Debit)`: Prompt for payment details and save negative amounts automatically.
     - `L) Ledger`: Access full transaction records and reporting options.
     - `X) Exit`: Safely terminate the application.
@@ -35,5 +35,5 @@ Transactions are stored in `transactions.csv` using the following pipe-delimited
 
 ```text
 date|time|description|vendor|amount
-2023-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50
-2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00
+2026-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50
+20236-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00
