@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-import java.util.concurrent.Callable;
 
 public class Main {
 
@@ -94,7 +93,7 @@ public class Main {
 
                 while (true) {
                     System.out.print("Enter Deposit Amount: ");
-                    amountString = homeScanner.nextLine();
+                    amountString = homeScanner.nextLine().trim();
                     try {
                         amount = Double.parseDouble(amountString);
                         deposit = dateTime + "|" + description + "|" + vendor + "|" + amount;
@@ -669,6 +668,5 @@ public class Main {
     }
     //endregion
     //endregion
-
 
 }
