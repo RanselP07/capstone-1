@@ -73,21 +73,21 @@ public class Main {
     }
 
     //region Deposit
-    private static String depositInfo(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+    private static String depositInfo(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         String dateTime = today.format(format);
 
         System.out.print("Enter Description: ");
-        String description = homeScanner.nextLine();
+        String description = myScanner.nextLine();
 
         System.out.print("Enter Vendor: ");
-        String vendor = homeScanner.nextLine();
+        String vendor = myScanner.nextLine();
 
         double amount;
 
         while (true) {
-            System.out.print("Enter Deposit Amount: ");
-            String amountString = homeScanner.nextLine().trim();
+            System.out.print("Enter Deposit Amount: $");
+            String amountString = myScanner.nextLine().trim();
 
             try {
                 amount = Double.parseDouble(amountString);
@@ -109,18 +109,20 @@ public class Main {
         return paymentStatues;
     }
 
-    public static void addDeposit(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+    public static void addDeposit(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         try {
             BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/test.csv", true));
             String confirmation = "";
 
-            do {
-                String deposit = depositInfo(homeScanner, today, format);
-                System.out.println(deposit);
-                System.out.print("Please confirm: Is the deposit information correct? (Yes/No): ");
-                confirmation = homeScanner.nextLine().trim().toLowerCase();
 
+            String deposit = depositInfo(myScanner, today, format);
+            System.out.println(deposit);
+            System.out.print("Please confirm: Is the deposit information correct? (Yes/No): ");
+
+
+            do {
+                confirmation = myScanner.nextLine().trim().toLowerCase();
                 switch (confirmation) {
                     case "yes":
                         System.out.println("Deposit Complete!");
@@ -128,26 +130,14 @@ public class Main {
                         break;
                     case "no":
                         System.out.println("Let's try again.");
+                        depositInfo(myScanner, today, format);
                         break;
                     default:
-                        while (true) {
-                            System.out.print("Invalid answer, please answer with a Yes/No: ");
-                            confirmation = homeScanner.nextLine().trim().toLowerCase();
-
-                            if (confirmation.equals("yes")) {
-                                System.out.println("Deposit Complete!");
-                                bufWriter.write("\n" + deposit);
-                                break;
-                            } else if (confirmation.equals("no")) {
-                                System.out.println("Let's try again.");
-                                break;
-                            }
-
-                        }
+                        System.out.print("Invalid answer, please answer with a Yes/No: ");
 
                 }
+            } while (!confirmation.equals("no"));
 
-            } while (confirmation.equals("no"));
 
             bufWriter.close();
         } catch (IOException e) {
@@ -158,20 +148,20 @@ public class Main {
     //endregion
 
     //region Payment
-    private static String paymentInfo(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+    private static String paymentInfo(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
         String dateTime = today.format(format);
 
         System.out.print("Enter Description: ");
-        String description = homeScanner.nextLine();
+        String description = myScanner.nextLine();
 
         System.out.print("Enter Vendor: ");
-        String vendor = homeScanner.nextLine();
+        String vendor = myScanner.nextLine();
 
         double payment;
 
         while (true) {
             System.out.print("Enter Payment Amount: ");
-            String paymentString = homeScanner.nextLine().trim();
+            String paymentString = myScanner.nextLine().trim();
 
             try {
                 payment = Double.parseDouble(paymentString);
@@ -192,18 +182,19 @@ public class Main {
         return paymentStatues;
     }
 
-    public static void makePayment(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
+    public static void makePayment(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         try {
             BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/test.csv", true));
             String confirmation = "";
 
-            do {
-                String payment = paymentInfo(homeScanner, today, format);
-                System.out.println(payment);
-                System.out.print("Please confirm: Is the payment information correct? (Yes/No): ");
-                confirmation = homeScanner.nextLine().trim().toLowerCase();
 
+            String payment = paymentInfo(myScanner, today, format);
+            System.out.println(payment);
+            System.out.print("Please confirm: Is the payment information correct? (Yes/No): ");
+
+            do {
+                confirmation = myScanner.nextLine().trim().toLowerCase();
                 switch (confirmation) {
                     case "yes":
                         System.out.println("Payment Complete!");
@@ -211,23 +202,10 @@ public class Main {
                         break;
                     case "no":
                         System.out.println("Let's try again.");
+                        paymentInfo(myScanner, today, format);
                         break;
                     default:
-                        while (true) {
-                            System.out.print("Invalid answer, please answer with a Yes/No: ");
-                            confirmation = homeScanner.nextLine().trim().toLowerCase();
-
-                            if (confirmation.equals("yes")) {
-                                System.out.println("Payment Complete!");
-                                bufWriter.write("\n" + payment);
-                                break;
-                            } else if (confirmation.equals("no")) {
-                                System.out.println("Let's try again.");
-                                depositInfo(homeScanner, today, format);
-                                break;
-                            }
-
-                        }
+                        System.out.print("Invalid answer, please answer with a Yes/No: ");
 
                 }
 
