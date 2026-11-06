@@ -51,10 +51,12 @@ public class Main {
             switch (homeInput) {
                 case "D":
                     System.out.println("\nAdd Deposit");
+                    System.out.print("\n📢 Type \"home\" anywhere in to return to the home screen.\n");
                     addDeposit(myScanner, today, format);
                     break;
                 case "P":
                     System.out.println("\nMake Payment");
+                    System.out.print("\n📢 Type \"home\" anywhere in to return to the home screen.\n");
                     makePayment(myScanner, today, format);
                     break;
                 case "L":
@@ -80,8 +82,16 @@ public class Main {
         System.out.print("Enter Description: ");
         String description = myScanner.nextLine();
 
+        if (description.trim().equalsIgnoreCase("home")){
+            homeScreenMenu(myScanner, today, format);
+        }
+
         System.out.print("Enter Vendor: ");
         String vendor = myScanner.nextLine();
+
+        if(vendor.trim().equalsIgnoreCase("home")){
+            homeScreenMenu(myScanner, today, format);
+        }
 
         double amount = 0;
 
@@ -89,7 +99,12 @@ public class Main {
 
         try {
             do {
-                String amountString = myScanner.nextLine().trim();
+                String amountString = myScanner.nextLine().trim().toLowerCase();
+
+                if(amountString.trim().equalsIgnoreCase("home")){
+                    homeScreenMenu(myScanner, today, format);
+                }
+
                 amount = Double.parseDouble(amountString);
 
                 if (amount <= 0) {
@@ -98,6 +113,7 @@ public class Main {
                     continue;
                 }
             } while (amount <= 0);
+
 
         } catch (NumberFormatException e) {
             System.out.println("Nice try!! Let's do this again.");
@@ -115,12 +131,16 @@ public class Main {
 
 
             String deposit = depositInfo(myScanner, today, format);
-            System.out.print(deposit);
+            System.out.print("\n" + deposit);
             System.out.print("\nPlease confirm: Is the deposit information correct? (Yes/No): ");
 
 
             do {
                 confirmation = myScanner.nextLine().trim().toLowerCase();
+
+                if (confirmation.trim().equalsIgnoreCase("home")){
+                    homeScreenMenu(myScanner, today, format);
+                }
                 switch (confirmation) {
                     case "yes":
                         System.out.println("Deposit Complete!");
@@ -147,13 +167,22 @@ public class Main {
 
     //region Payment
     private static String paymentInfo(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
+
         String dateTime = today.format(format);
 
         System.out.print("Enter Description: ");
         String description = myScanner.nextLine();
 
+        if (description.trim().equalsIgnoreCase("home")){
+            homeScreenMenu(myScanner, today, format);
+        }
+
         System.out.print("Enter Vendor: ");
         String vendor = myScanner.nextLine();
+
+        if (vendor.trim().equalsIgnoreCase("home")){
+            homeScreenMenu(myScanner, today, format);
+        }
 
         double amount = 0;
 
@@ -162,6 +191,11 @@ public class Main {
         try {
             do {
                 String amountString = myScanner.nextLine().trim();
+
+                if (amountString.trim().equalsIgnoreCase("home")){
+                    homeScreenMenu(myScanner, today, format);
+                }
+
                 amount = Double.parseDouble(amountString);
 
                 if (amount <= 0) {
@@ -187,11 +221,16 @@ public class Main {
 
 
             String payment = paymentInfo(myScanner, today, format);
-            System.out.println(payment);
-            System.out.print("Please confirm: Is the payment information correct? (Yes/No): ");
+            System.out.print("\n" + payment);
+            System.out.print("\nPlease confirm: Is the payment information correct? (Yes/No): ");
 
             do {
                 confirmation = myScanner.nextLine().trim().toLowerCase();
+
+                if (confirmation.trim().equalsIgnoreCase("home")){
+                    homeScreenMenu(myScanner, today, format);
+                }
+
                 switch (confirmation) {
                     case "yes":
                         System.out.println("Payment Complete!");
@@ -220,12 +259,11 @@ public class Main {
     //region Ledger Screen
     private static void ledger(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
         String ledgerMenu = """
-                A) All - Display all entries
-                D) Deposits - Display only the entries that are deposits into the account
-                P) Payments - Display only the negative entries (or payments)
-                R) Reports - A new screen that allows the user to run pre-defined reports or
-                to run a custom search
-                H) Home - go back to the home page
+                A) All
+                D) Deposits
+                P) Payments
+                R) Reports
+                H) Home
                 Enter your choice:""";
 
         String ledgerInput;
@@ -236,23 +274,23 @@ public class Main {
 
             switch (ledgerInput) {
                 case "A":
-                    System.out.println("All");
+                    System.out.println("\nAll\n");
                     all();
                     break;
                 case "D":
-                    System.out.println("Deposits");
+                    System.out.println("\nDeposits\n");
                     deposits();
                     break;
                 case "P":
-                    System.out.println("Payments");
+                    System.out.println("\nPayments\n");
                     payments();
                     break;
                 case "R":
-                    System.out.println("Reports");
+                    System.out.println("\nReports");
                     report(myScanner, today, format);
                     break;
                 case "H":
-                    System.out.println("Home");
+                    System.out.println("\nHome");
                     break;
                 default:
                     System.out.println("Invalid choice. Please enter A, D, P, R, or H.");
@@ -377,9 +415,8 @@ public class Main {
                 2) Previous Month
                 3) Year To Date
                 4) Previous Year
-                5) Search by Vendor - prompt the user for the vendor name and
-                display all entries for that vendor
-                0) Back - go back to the Ledger page
+                5) Search by Vendor
+                0) Back
                 Enter your choice:""";
 
         String reportInput;
@@ -390,24 +427,25 @@ public class Main {
 
             switch (reportInput) {
                 case "1":
-                    System.out.println("Month to Date");
+                    System.out.println("\nMonth to Date\n");
                     monthToDate(today);
                     break;
                 case "2":
-                    System.out.println("Previous Month");
+                    System.out.println("\nPrevious Month\n");
                     previousMonth(today);
                     break;
                 case "3":
-                    System.out.println("Year to Date");
+                    System.out.println("\nYear to Date\n");
                     yearToDate(today);
                     break;
                 case "4":
-                    System.out.println("Previous Year");
+                    System.out.println("\nPrevious Year\n");
                     previousYear(today);
                     break;
                 case "5":
-                    System.out.println("Search by Vendor");
-                    searchByVendor(myScanner);
+                    System.out.println("\nSearch by Vendor\n");
+                    System.out.print("\n📢 Type \"home\", \"ledger\", or \"report\" to return to the home screen.\n");
+                    searchByVendor(myScanner, today, format);
                     break;
                 case "0":
                     System.out.println("Back");
@@ -599,11 +637,19 @@ public class Main {
 
     }
 
-    private static void searchByVendor(Scanner myScanner) {
+    private static void searchByVendor(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         ArrayList<Transaction> vendors = new ArrayList<>();
         System.out.print("Enter the vendor: ");
         String input = myScanner.nextLine();
+
+        if (input.trim().equalsIgnoreCase("home")){
+            homeScreenMenu(myScanner, today, format);
+        }else if (input.trim().equalsIgnoreCase("ledger")){
+            ledger(myScanner, today, format);
+        }else if (input.trim().equalsIgnoreCase("report")){
+            report(myScanner, today, format);
+        }
 
 
         try {
