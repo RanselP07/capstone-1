@@ -75,61 +75,38 @@ public class Main {
     //region Deposit
     private static String depositInfo(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
 
-        double amount = 0;
-        String answer = "";
-        String amountString = "";
         String dateTime = today.format(format);
-        String deposit = "";
 
-        do {
+        System.out.print("Enter Description: ");
+        String description = homeScanner.nextLine();
 
-            System.out.print("Enter Description: ");
-            String description = homeScanner.nextLine();
+        System.out.print("Enter Vendor: ");
+        String vendor = homeScanner.nextLine();
 
-            System.out.print("Enter Vendor: ");
-            String vendor = homeScanner.nextLine();
+        double amount;
 
-            do {
+        while (true) {
+            System.out.print("Enter Deposit Amount: ");
+            String amountString = homeScanner.nextLine().trim();
 
-                while (true) {
-                    System.out.print("Enter Deposit Amount: ");
-                    amountString = homeScanner.nextLine().trim();
-                    try {
-                        amount = Double.parseDouble(amountString);
-                        String stringFormat = "%s|%s|%s|$%.2f";
-                        deposit = String.format(stringFormat, dateTime, description, vendor, amount);
-                    } catch (NumberFormatException e) {
-                        System.out.print("Quit try to break my code.\n");
-                    }
+            try {
+                amount = Double.parseDouble(amountString);
 
-
-                    if (amount == 0) {
-                        System.out.println("Insufficient amount please try again.");
-                    } else if (amount < 0) {
-                        System.out.print("This is a negative amount, would you like to pay a payment (Yes/No)? ");
-                        answer = homeScanner.nextLine().toUpperCase();
-
-
-                        switch (answer) {
-                            case "YES":
-                                makePayment(homeScanner, today, format);
-                                break;
-                            case "NO":
-                                System.out.println("Enter a sufficient amount.");
-                                break;
-                            default:
-                                System.out.println("Please answer Yes/No");
-                                break;
-                        }
-
-                    }
-                    return deposit;
+                if (amount <= 0) {
+                    System.out.println("Deposit amount must be greater than $0.");
+                    continue;
                 }
 
-            } while (answer.equals("YES"));
+                break;
 
-        } while (amount < 0);
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+        String stringFormat = "%s|%s|%s|$%.2f";
+        String paymentStatues = String.format(stringFormat, dateTime, description, vendor, amount);
 
+        return paymentStatues;
     }
 
     public static void addDeposit(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
@@ -182,65 +159,37 @@ public class Main {
 
     //region Payment
     private static String paymentInfo(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
-        double payment = 0.0;
-        String answer = "";
-        String amountString = "";
         String dateTime = today.format(format);
-        String paymentStatues = "";
 
-        do {
+        System.out.print("Enter Description: ");
+        String description = homeScanner.nextLine();
 
-            System.out.print("Enter Description: ");
-            String description = homeScanner.nextLine();
+        System.out.print("Enter Vendor: ");
+        String vendor = homeScanner.nextLine();
 
-            System.out.print("Enter Vendor: ");
-            String vendor = homeScanner.nextLine();
+        double payment;
 
-            do {
+        while (true) {
+            System.out.print("Enter Payment Amount: ");
+            String paymentString = homeScanner.nextLine().trim();
 
-                while (true) {
-                    System.out.print("Enter Payment Amount: ");
-                    amountString = homeScanner.nextLine();
-                    try {
-                        payment = Double.parseDouble(amountString);
-                        String stringFormat = "%s|%s|%s|$%.2f";
-                        paymentStatues = String.format(stringFormat, dateTime, description, vendor, payment);
-                        if (payment == 0) {
-                            System.out.println("Insufficient amount please try again.");
-                        } else if (payment > 0) {
-                            System.out.print("This is a positive amount, would you like to make a deposit (Yes/No)? ");
-                            answer = homeScanner.nextLine().toUpperCase();
+            try {
+                payment = Double.parseDouble(paymentString);
 
-                            switch (answer) {
-                                case "YES":
-                                    addDeposit(homeScanner, today, format);
-                                    break;
-                                case "NO":
-                                    while (true) {
-                                        System.out.print("Enter a sufficient amount: ");
-                                        amountString = homeScanner.nextLine();
-                                        payment = Double.parseDouble(amountString);
-                                        if (payment < 0) {
-                                            break;
-                                        }
-                                    }
-
-                                default:
-                                    System.out.println("Please answer Yes/No");
-                                    break;
-                            }
-
-                            return paymentStatues;
-                        }
-
-                    } catch (NumberFormatException e) {
-                        System.out.print("Quit try to break my code.\n");
-                    }
+                if (payment <= 0) {
+                    System.out.println("Deposit amount must be greater than $0.");
+                    continue;
                 }
+                break;
 
-            } while (answer.equals("YES"));
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+        String stringFormat = "%s|%s|%s|$%.2f";
+        String paymentStatues = String.format(stringFormat, dateTime, description, vendor, payment);
 
-        } while (payment < 0);
+        return paymentStatues;
     }
 
     public static void makePayment(Scanner homeScanner, LocalDateTime today, DateTimeFormatter format) {
