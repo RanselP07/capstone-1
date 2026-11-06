@@ -83,30 +83,28 @@ public class Main {
         System.out.print("Enter Vendor: ");
         String vendor = myScanner.nextLine();
 
-        double amount;
+        double amount = 0;
 
-        while (true) {
-            System.out.print("Enter Deposit Amount: $");
-            String amountString = myScanner.nextLine().trim();
+        System.out.print("Enter Deposit Amount: $");
 
-            try {
+        try {
+            do {
+                String amountString = myScanner.nextLine().trim();
                 amount = Double.parseDouble(amountString);
 
                 if (amount <= 0) {
-                    System.out.println("Deposit amount must be greater than $0.");
+                    System.out.print("Deposit amount must be greater than $0, Try again: ");
+                } else {
                     continue;
                 }
+            } while (amount <= 0);
 
-                break;
-
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-            }
+        } catch (NumberFormatException e) {
+            System.out.println("Nice try!! Let's do this again.");
+            depositInfo(myScanner, today, format);
         }
         String stringFormat = "%s|%s|%s|$%.2f";
-        String paymentStatues = String.format(stringFormat, dateTime, description, vendor, amount);
-
-        return paymentStatues;
+        return String.format(stringFormat, dateTime, description, vendor, amount);
     }
 
     public static void addDeposit(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
@@ -117,8 +115,8 @@ public class Main {
 
 
             String deposit = depositInfo(myScanner, today, format);
-            System.out.println(deposit);
-            System.out.print("Please confirm: Is the deposit information correct? (Yes/No): ");
+            System.out.print(deposit);
+            System.out.print("\nPlease confirm: Is the deposit information correct? (Yes/No): ");
 
 
             do {
@@ -157,29 +155,28 @@ public class Main {
         System.out.print("Enter Vendor: ");
         String vendor = myScanner.nextLine();
 
-        double payment;
+        double amount = 0;
 
-        while (true) {
-            System.out.print("Enter Payment Amount: ");
-            String paymentString = myScanner.nextLine().trim();
+        System.out.print("Enter Payment Amount: $-");
 
-            try {
-                payment = Double.parseDouble(paymentString);
+        try {
+            do {
+                String amountString = myScanner.nextLine().trim();
+                amount = Double.parseDouble(amountString);
 
-                if (payment <= 0) {
-                    System.out.println("Deposit amount must be greater than $0.");
+                if (amount <= 0) {
+                    System.out.print("Payment amount must be greater than $0 (and it already includes negative), Try again: ");
+                } else {
                     continue;
                 }
-                break;
+            } while (amount <= 0);
 
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-            }
+        } catch (NumberFormatException e) {
+            System.out.println("Nice try!! Let's do this again.");
+            paymentInfo(myScanner, today, format);
         }
-        String stringFormat = "%s|%s|%s|$%.2f";
-        String paymentStatues = String.format(stringFormat, dateTime, description, vendor, payment);
-
-        return paymentStatues;
+        String stringFormat = "%s|%s|%s|$-%.2f";
+        return String.format(stringFormat, dateTime, description, vendor, amount);
     }
 
     public static void makePayment(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
