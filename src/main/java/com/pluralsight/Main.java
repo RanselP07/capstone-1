@@ -126,7 +126,7 @@ public class Main {
     public static void addDeposit(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         try {
-            BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/test.csv", true));
+            BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/transactions.csv", true));
             String confirmation = "";
 
 
@@ -216,7 +216,7 @@ public class Main {
     public static void makePayment(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         try {
-            BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/test.csv", true));
+            BufferedWriter bufWriter = new BufferedWriter(new FileWriter("src/main/resources/transactions.csv", true));
             String confirmation = "";
 
 
@@ -301,7 +301,7 @@ public class Main {
 
     public static void all() {
         try {
-            BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             ArrayList<String> allTransactions = new ArrayList<>();
             String line = buffReader.readLine();
 
@@ -330,7 +330,7 @@ public class Main {
 
     public static void deposits() {
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             ArrayList<Transaction> deposit = new ArrayList<>();
 
@@ -369,7 +369,7 @@ public class Main {
 
     public static void payments() {
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             ArrayList<Transaction> payment = new ArrayList<>();
 
@@ -466,7 +466,7 @@ public class Main {
         ArrayList<Transaction> thisMonthTransactions = new ArrayList<>();
 
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             line = bufReader.readLine();
 
@@ -510,7 +510,7 @@ public class Main {
         ArrayList<Transaction> prevMonthTransaction = new ArrayList<>();
 
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             line = bufReader.readLine();
 
@@ -554,7 +554,7 @@ public class Main {
         ArrayList<Transaction> thisYearTransaction = new ArrayList<>();
 
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             line = bufReader.readLine();
 
@@ -591,7 +591,7 @@ public class Main {
         }
     }
 
-
+    // Previous Year
     private static void previousYear(LocalDateTime today) {
 
         int thisYear = today.minusYears(1).getYear();
@@ -599,7 +599,7 @@ public class Main {
         ArrayList<Transaction> prevYearTransaction = new ArrayList<>();
 
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             line = bufReader.readLine();
 
@@ -637,6 +637,7 @@ public class Main {
 
     }
 
+    // Search by Vendor
     private static void searchByVendor(Scanner myScanner, LocalDateTime today, DateTimeFormatter format) {
 
         ArrayList<Transaction> vendors = new ArrayList<>();
@@ -653,7 +654,7 @@ public class Main {
 
 
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/test.csv"));
+            BufferedReader bufReader = new BufferedReader(new FileReader("src/main/resources/transactions.csv"));
             String line = bufReader.readLine();
             line = bufReader.readLine();
 
