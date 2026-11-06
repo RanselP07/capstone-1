@@ -51,12 +51,12 @@ public class Main {
             switch (homeInput) {
                 case "D":
                     System.out.println("\nAdd Deposit");
-                    System.out.print("\n📢 Type \"home\" anywhere in to return to the home screen.\n");
+                    System.out.print("\n📢 Type \"home\" anywhere to return to the home screen.\n");
                     addDeposit(myScanner, today, format);
                     break;
                 case "P":
                     System.out.println("\nMake Payment");
-                    System.out.print("\n📢 Type \"home\" anywhere in to return to the home screen.\n");
+                    System.out.print("\n📢 Type \"home\" anywhere to return to the home screen.\n");
                     makePayment(myScanner, today, format);
                     break;
                 case "L":
